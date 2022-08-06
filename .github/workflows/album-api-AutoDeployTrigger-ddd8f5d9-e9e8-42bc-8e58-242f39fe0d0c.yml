@@ -7,7 +7,7 @@ on:
     branches: 
       [ main ]
     paths:
-    - 'dockerfile/**'
+    - 'API/src/dockerfile/**'
     - '.github/workflows/album-api-AutoDeployTrigger-ddd8f5d9-e9e8-42bc-8e58-242f39fe0d0c.yml'
 
   # Allow mannually trigger 
@@ -36,8 +36,8 @@ jobs:
         with:
           push: true
           tags: acaalbumstedescomicchidev.azurecr.io/album-api:${{ github.sha }}
-          file: ./dockerfile/Dockerfile
-          context: ./dockerfile/
+          file: API/src/dockerfile/Dockerfile
+          context: API/src/dockerfile/
 
 
   deploy:
