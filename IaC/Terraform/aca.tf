@@ -113,10 +113,21 @@ resource "azapi_resource" "ui_container_app" {
         containers = [
           {
             image = "${azurerm_container_registry.aca-registry.login_server}/${var.ui_name}:latest"
-            name  = var.ui_name
+            name  = var.ui_name,
+            env : [
+              {
+                "name" : "APPINSIGHTS_INSTRUMENTATIONKEY",
+                "value" : azurerm_application_insights.aca-ai.instrumentation_key
+              },
+              {
+                "name" : "API_BASE_URL",
+                "value" : "https://${jsondecode(azapi_resource.api_container_app.output).properties.configuration.ingress.fqdn}"
+              }
+            ]
           }
         ]
       }
+    }
     }
   })
 
