@@ -1,8 +1,18 @@
 resource "azapi_resource" "managed_environment" {
+  type      = "Microsoft.App/managedEnvironments@2022-03-01"
   name      = var.managed_environment_name
   location  = azurerm_resource_group.rg.location
   parent_id = azurerm_resource_group.rg.id
-  type      = "Microsoft.App/managedEnvironments@2022-03-01"
+  body = jsonencode({
+    appLogsConfiguration = {
+        destination = "log-analytics"
+        logAnalyticsConfiguration = {
+          customerId = azurerm_log_analytics_workspace.acaworkspace.workspace_id
+          sharedKey  = azurerm_log_analytics_workspace.acaworkspace.primary_shared_key
+        }
+      }
+  })
+  
   tags = local.tags
 
   lifecycle {
@@ -13,22 +23,18 @@ resource "azapi_resource" "managed_environment" {
 }
 
 resource "azapi_resource" "api_container_app" {
+  type      = "Microsoft.App/containerApps@2022-03-01"
   name      = var.api_name
   location  = azurerm_resource_group.rg.location
   parent_id = azurerm_resource_group.rg.id
-  type      = "Microsoft.App/containerApps@2022-03-01"
   tags      = local.tags
   
   body = jsonencode({
+    identity = {
+      type = "SystemAssigned"
+    }
     properties = {
       managedEnvironmentId = azapi_resource.managed_environment.id
-      appLogsConfiguration = {
-        destination = "log-analytics"
-        logAnalyticsConfiguration = {
-          customerId = azurerm_log_analytics_workspace.acaworkspace.workspace_id
-          sharedKey  = azurerm_log_analytics_workspace.acaworkspace.primary_shared_key
-        }
-      }
       configuration = {
         ingress = {
           targetPort = 3500
@@ -74,10 +80,10 @@ resource "azapi_resource" "api_container_app" {
 
 
 resource "azapi_resource" "ui_container_app" {
+  type      = "Microsoft.App/containerApps@2022-03-01"
   name      = var.ui_name
   location  = azurerm_resource_group.rg.location
   parent_id = azurerm_resource_group.rg.id
-  type      = "Microsoft.App/containerApps@2022-03-01"
   tags      = local.tags
   body = jsonencode({
     properties = {
