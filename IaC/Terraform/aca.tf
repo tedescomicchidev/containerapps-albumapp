@@ -4,15 +4,16 @@ resource "azapi_resource" "managed_environment" {
   location  = azurerm_resource_group.rg.location
   parent_id = azurerm_resource_group.rg.id
   body = jsonencode({
-    appLogsConfiguration = {
+    properties = {
+      appLogsConfiguration = {
         destination = "log-analytics"
         logAnalyticsConfiguration = {
           customerId = azurerm_log_analytics_workspace.acaworkspace.workspace_id
           sharedKey  = azurerm_log_analytics_workspace.acaworkspace.primary_shared_key
         }
       }
-  })
-  
+    }
+  })  
   tags = local.tags
 
   lifecycle {
