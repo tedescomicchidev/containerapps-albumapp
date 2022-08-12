@@ -59,7 +59,7 @@ resource "azapi_resource" "api_container_app" {
       template = {
         containers = [
           {
-            image = "${azurerm_container_registry.aca-registry.login_server}/${var.api_name}"
+            image = "${azurerm_container_registry.aca-registry.login_server}/${var.api_name}:latest"
             name  = var.api_name
           }
         ]
@@ -112,7 +112,7 @@ resource "azapi_resource" "ui_container_app" {
       template = {
         containers = [
           {
-            image = "${azurerm_container_registry.aca-registry.login_server}/${var.ui_name}"
+            image = "${azurerm_container_registry.aca-registry.login_server}/${var.ui_name}:latest"
             name  = var.ui_name
           }
         ]
