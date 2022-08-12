@@ -91,7 +91,7 @@ resource "azapi_resource" "ui_container_app" {
       managedEnvironmentId = azapi_resource.managed_environment.id
       configuration = {
         ingress = {
-          targetPort = 3500
+          targetPort = 3000
           external   = true
         },
         registries = [
@@ -114,6 +114,10 @@ resource "azapi_resource" "ui_container_app" {
           {
             image = "${azurerm_container_registry.aca-registry.login_server}/${var.ui_name}:latest"
             name  = var.ui_name,
+            resources = {
+              cpu    = 0.25,
+              memory = "0.5Gi"
+            }
             env : [
               {
                 "name" : "APPINSIGHTS_INSTRUMENTATIONKEY",
