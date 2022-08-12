@@ -18,9 +18,17 @@ resource "azapi_resource" "api_container_app" {
   parent_id = azurerm_resource_group.rg.id
   type      = "Microsoft.App/containerApps@2022-03-01"
   tags      = local.tags
+  
   body = jsonencode({
     properties = {
       managedEnvironmentId = azapi_resource.managed_environment.id
+      appLogsConfiguration = {
+        destination = "log-analytics"
+        logAnalyticsConfiguration = {
+          customerId = azurerm_log_analytics_workspace.acaworkspace.workspace_id
+          sharedKey  = azurerm_log_analytics_workspace.acaworkspace.primary_shared_key
+        }
+      }
       configuration = {
         ingress = {
           targetPort = 3500
