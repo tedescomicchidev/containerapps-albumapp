@@ -128,7 +128,6 @@ resource "azapi_resource" "ui_container_app" {
         ]
       }
     }
-    }
   })
 
   lifecycle {
